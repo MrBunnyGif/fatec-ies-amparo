@@ -16,8 +16,11 @@ import {
 import CIcon from '@coreui/icons-react'
 import { cilLockLocked, cilUser } from '@coreui/icons'
 import LoadingButton from 'src/components/LoadingButton'
+import auth from 'src/auth'
+import { useNavigate } from "react-router-dom";
 
-const Login = () => {
+const Login = props => {
+  const navigate = useNavigate();
   const [requesting, setReqState] = useState()
   const [formData, setFormData] = useState({ username: undefined, password: undefined })
 
@@ -25,7 +28,10 @@ const Login = () => {
     e.preventDefault()
     setReqState(true)
     console.log(formData)
-    setTimeout(() => setReqState(false), 2000)
+    setTimeout(() => {
+      setReqState(false)
+      auth.login(() => navigate('/dashboard'))
+    }, 2000)
   }
 
   const handleInputChange = e => {
@@ -38,18 +44,24 @@ const Login = () => {
     <div className="bg-light min-vh-100 d-flex flex-row align-items-center">
       <CContainer>
         <CRow className="justify-content-center">
-          <CCol md={8}>
+          <CCol md={6}>
             <CCardGroup>
               <CCard className="p-4">
                 <CCardBody>
                   <CForm onSubmit={handleSubmit}>
                     <h1>Login</h1>
-                    <p className="text-medium-emphasis">Sign In to your account</p>
+                    <p className="text-medium-emphasis">Logue com sue e-mail e senha!</p>
                     <CInputGroup className="mb-3">
                       <CInputGroupText>
                         <CIcon icon={cilUser} />
                       </CInputGroupText>
-                      <CFormInput required onChange={handleInputChange} placeholder="Username" autoComplete="username" name="username" />
+                      <CFormInput
+                        required
+                        onChange={handleInputChange}
+                        placeholder="email"
+                        autoComplete="username"
+                        name="username"
+                      />
                     </CInputGroup>
 
                     <CInputGroup className="mb-4">
@@ -58,7 +70,7 @@ const Login = () => {
                       </CInputGroupText>
                       <CFormInput onChange={handleInputChange}
                         type="password"
-                        placeholder="Password"
+                        placeholder="Senha"
                         autoComplete="current-password"
                         name="password"
                         required
@@ -72,14 +84,14 @@ const Login = () => {
                       </CCol>
                       <CCol xs={6} className="text-right">
                         <CButton color="link" className="px-0">
-                          Forgot password?
+                          Esqueceu a senha?
                         </CButton>
                       </CCol>
                     </CRow>
                   </CForm>
                 </CCardBody>
               </CCard>
-              <CCard className="text-white bg-primary py-5" style={{ width: '44%' }}>
+              {/* <CCard className="text-white bg-primary py-5" style={{ width: '44%' }}>
                 <CCardBody className="text-center">
                   <div>
                     <h2>Sign up</h2>
@@ -94,7 +106,7 @@ const Login = () => {
                     </Link>
                   </div>
                 </CCardBody>
-              </CCard>
+              </CCard> */}
             </CCardGroup>
           </CCol>
         </CRow>
