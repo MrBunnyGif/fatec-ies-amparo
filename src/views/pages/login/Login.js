@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
 import {
   CButton,
@@ -15,8 +15,25 @@ import {
 } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
 import { cilLockLocked, cilUser } from '@coreui/icons'
+import LoadingButton from 'src/components/LoadingButton'
 
 const Login = () => {
+  const [requesting, setReqState] = useState()
+  const [formData, setFormData] = useState({ username: undefined, password: undefined })
+
+  const handleSubmit = e => {
+    e.preventDefault()
+    setReqState(true)
+    console.log(formData)
+    setTimeout(() => setReqState(false), 2000)
+  }
+
+  const handleInputChange = e => {
+    let formDataCopy = formData
+    formDataCopy[e.target.name] = e.target.value
+    setFormData(formDataCopy)
+  }
+
   return (
     <div className="bg-light min-vh-100 d-flex flex-row align-items-center">
       <CContainer>
@@ -25,30 +42,33 @@ const Login = () => {
             <CCardGroup>
               <CCard className="p-4">
                 <CCardBody>
-                  <CForm>
+                  <CForm onSubmit={handleSubmit}>
                     <h1>Login</h1>
                     <p className="text-medium-emphasis">Sign In to your account</p>
                     <CInputGroup className="mb-3">
                       <CInputGroupText>
                         <CIcon icon={cilUser} />
                       </CInputGroupText>
-                      <CFormInput placeholder="Username" autoComplete="username" />
+                      <CFormInput required onChange={handleInputChange} placeholder="Username" autoComplete="username" name="username" />
                     </CInputGroup>
+
                     <CInputGroup className="mb-4">
                       <CInputGroupText>
                         <CIcon icon={cilLockLocked} />
                       </CInputGroupText>
-                      <CFormInput
+                      <CFormInput onChange={handleInputChange}
                         type="password"
                         placeholder="Password"
                         autoComplete="current-password"
+                        name="password"
+                        required
                       />
                     </CInputGroup>
                     <CRow>
                       <CCol xs={6}>
-                        <CButton color="primary" className="px-4">
+                        <LoadingButton loading={requesting} submit>
                           Login
-                        </CButton>
+                        </LoadingButton>
                       </CCol>
                       <CCol xs={6} className="text-right">
                         <CButton color="link" className="px-0">
